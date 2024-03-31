@@ -1,0 +1,25 @@
+{
+  "name": "discord-samplebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iheanyi/discord-samplebot.git"
+  },
+  "author": "Iheanyi Ekechukwu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iheanyi/discord-samplebot/issues"
+  },
+  "homepage": "https://github.com/iheanyi/discord-samplebot#readme",
+  "dependencies": {
+    "discord.js": "^14.12.1",
+    "dotenv": "^16.4.5",
+    "fluent-ffmpeg": "^2.1.2",
+    "tempfile": "^5.0.0"
+  }
+}
