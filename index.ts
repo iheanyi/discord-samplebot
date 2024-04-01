@@ -3,47 +3,70 @@ dotenv.config();
 import { Client, Events, GatewayIntentBits, REST, Routes } from "discord.js";
 import SampleCommand from "./commands/sample";
 
-const {
-  DISCORD_APP_ID: clientID,
-  DISCORD_BOT_TOKEN: token,
-  DISCORD_DEV_SERVER_ID: guildID,
-} = process.env;
+export interface Env {
+  // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
+  // MY_KV_NAMESPACE: KVNamespace;
+  //
+  // Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
+  // MY_DURABLE_OBJECT: DurableObjectNamespace;
+  //
+  // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
+  // MY_BUCKET: R2Bucket;
+  //
+  // Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
+  // MY_SERVICE: Fetcher;
+  //
+  // Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
+  // MY_QUEUE: Queue;
+}
 
-const client: Client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
+class SampleBot {
+  constructor() {}
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  async run() {
+    const {
+      DISCORD_APP_ID: clientID,
+      DISCORD_BOT_TOKEN: token,
+      DISCORD_DEV_SERVER_ID: guildID,
+    } = process.env;
 
-  if (interaction.commandName === "sample") {
-    try {
-      // @ts-ignore
-      await SampleCommand.execute(interaction);
-    } catch (error) {
-      console.error(error);
-      await interaction.reply({
-        content: "There was an error while executing this command.",
-      });
-    }
-  }
-});
+    const client: Client = new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+      ],
+    });
 
-// Construct and prepare an instance of the REST module
-const rest = new REST().setToken(token as string);
+    client.on(Events.InteractionCreate, async (interaction) => {
+      if (!interaction.isChatInputCommand()) return;
 
-const commandsToRegister = [SampleCommand];
+      if (interaction.commandName === "sample") {
+        try {
+          // @ts-ignore
+          await SampleCommand.execute(interaction);
+        } catch (error) {
+          console.error(error);
+          await interaction.reply({
+            content: "There was an error while executing this command.",
+          });
+        }
+      }
+    });
 
-const registerBody = commandsToRegister.map((command) => command.data.toJSON());
+    // Construct and prepare an instance of the REST module
+    const rest = new REST().setToken(token as string);
 
-(async () => {
-  try {
-    console.log(`Started refreshing 1 application (/) commands.`);
-    /* await rest.put(
+    const commandsToRegister = [SampleCommand];
+
+    const registerBody = commandsToRegister.map((command) =>
+      command.data.toJSON(),
+    );
+
+    (async () => {
+      try {
+        console.log(`Started refreshing 1 application (/) commands.`);
+        /* await rest.put(
       Routes.applicationGuildCommands(String(clientID), String(guildID)),
       { body: [] },
     );
@@ -53,18 +76,25 @@ const registerBody = commandsToRegister.map((command) => command.data.toJSON());
     await rest.put(Routes.applicationCommands(String(clientID)), { body: [] });
     console.log("Successfully deleted all application commands.");*/
 
-    // The put method is used to fully refresh all commands in the guild with the current set
-    await rest.put(Routes.applicationCommands(String(clientID)), {
-      body: registerBody,
+        // The put method is used to fully refresh all commands in the guild with the current set
+        await rest.put(Routes.applicationCommands(String(clientID)), {
+          body: registerBody,
+        });
+        console.log(`Successfully reloaded 1 application (/) commands.`);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+
+    client.once(Events.ClientReady, () => {
+      console.log("Server is ready to start processing things.");
     });
-    console.log(`Successfully reloaded 1 application (/) commands.`);
-  } catch (error) {
-    console.error(error);
+
+    client.login(token);
   }
-})();
+}
 
-client.once(Events.ClientReady, () => {
-  console.log("Server is ready to start processing things.");
-});
+const bot = new SampleBot();
+bot.run();
 
-client.login(token);
+export default SampleBot;
