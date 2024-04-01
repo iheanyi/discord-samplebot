@@ -23,7 +23,7 @@ async function youtubeSampleSource(url: string, filepath: string) {
   return { data, title: info.videoDetails.title };
 }
 
-async function downloadSample(url, interaction) {
+async function downloadSample(url: string, interaction: any) {
   let allowedHosts = [
     "youtube.com",
     "m.youtube.com",
