@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch *.ts",
+    "cf-dev": "wranger dev",
+    "deploy": "wranger deploy",
     "start": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,6 +32,7 @@
     "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240329.0",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
     "chai": "^5.1.0",
@@ -42,6 +45,8 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
-    "wrangler": "^3.41.0"
+    "wrangler": "^3.41.0",
+    "@cloudflare/vitest-pool-workers": "^0.1.0",
+    "vitest": "1.3.0"
   }
 }
