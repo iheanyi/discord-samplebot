@@ -1,4 +1,4 @@
-import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
+import { AttachmentBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import urlParse from "url";
 import tempfile from "tempfile";
 import fs from "node:fs";
@@ -39,20 +39,24 @@ async function downloadSample(url, interaction) {
   let defaultFormat = "mp3";
 
   // @eslint-ignore
-  let { hostname } = urlParse.parse(url);
-  if (allowedHosts.includes(hostname!.toString())) {
-    const user = interaction.user;
-    const { data, title } = await youtubeSampleSource(url);
-    const file = new AttachmentBuilder(data).setName(
-      `${title}.${defaultFormat}`,
-    );
-    console.log("Successfully downloaded sample!");
-    await interaction.followUp({
-      content: `${user} Your sample is ready!`,
-      files: [file],
-    });
-  } else {
-    throw new Error(`url "${url}" is not supported`);
+  try {
+    const { hostname } = new URL(url);
+    if (allowedHosts.includes(hostname.toString())) {
+      const user = interaction.user;
+      const { data, title } = await youtubeSampleSource(url);
+      const file = new AttachmentBuilder(data).setName(
+        `${title}.${defaultFormat}`,
+      );
+      console.log("Successfully downloaded sample!");
+      await interaction.followUp({
+        content: `${user} Your sample is ready!`,
+        files: [file],
+      });
+    } else {
+      throw new Error(`url "${url}" is not supported`);
+    }
+  } catch (err) {
+    throw new Error(`${url} is not a valid URL`);
   }
 }
 
@@ -63,7 +67,7 @@ const command = {
     .addStringOption((option) => {
       return option
         .setName("url")
-        .setDescription("YouTube URL to download the sample from")
+        .setDescription("YouTube URL to download")
         .setRequired(true);
     }),
   // @ts-ignore
@@ -72,10 +76,10 @@ const command = {
     try {
       await interaction.reply("Attempting to download sample...");
       await downloadSample(url, interaction);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       await interaction.followUp({
-        content: `There was an error while executing this command. ${err}`,
+        content: `There was an error while executing this command. ${codeBlock(err.toString())}`,
       });
     }
   },
