@@ -6,11 +6,10 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch *.ts",
-    "cf-dev": "wranger dev",
-    "deploy": "wranger deploy",
-    "start": "ts-node index.ts",
+    "start": "tsx index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iheanyi/discord-samplebot.git"
