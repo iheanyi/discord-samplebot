@@ -61,6 +61,7 @@ async function downloadSample(url, interaction) {
 }
 
 const command = {
+  name: "sample",
   data: new SlashCommandBuilder()
     .setName("sample")
     .setDescription("Download a sample from YouTube")
