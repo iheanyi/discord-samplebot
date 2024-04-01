@@ -41,13 +41,14 @@ async function downloadSample(url, interaction) {
   // @eslint-ignore
   let { hostname } = urlParse.parse(url);
   if (allowedHosts.includes(hostname!.toString())) {
+    const user = interaction.user;
     const { data, title } = await youtubeSampleSource(url);
     const file = new AttachmentBuilder(data).setName(
       `${title}.${defaultFormat}`,
     );
     console.log("Successfully downloaded sample!");
-    interaction.followUp({
-      content: `Downloaded sample from "${title}"`,
+    await interaction.followUp({
+      content: `${user} Your sample is ready!`,
       files: [file],
     });
   } else {
@@ -68,8 +69,9 @@ const command = {
   // @ts-ignore
   async execute(interaction): Promise<void> {
     const url = interaction.options.getString("url");
+    const user = interaction.user;
     try {
-      interaction.reply("Attempting to download sample...");
+      await interaction.reply("Attempting to download sample...");
       await downloadSample(url, interaction);
     } catch (err) {
       console.error(err);
