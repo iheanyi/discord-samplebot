@@ -1,17 +1,12 @@
 import { AttachmentBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
-import urlParse from "url";
-import tempfile from "tempfile";
 import fs from "node:fs";
-// @ts-ignore
+import { temporaryFileTask } from "tempy";
 import ffmpeg from "fluent-ffmpeg";
 import ytdl from "ytdl-core";
 
-async function youtubeSampleSource(url: string) {
+async function youtubeSampleSource(url: string, filepath: string) {
   let info = await ytdl.getInfo(url);
-  let filepath = tempfile({
-    extension: `.mp3`,
-  });
-  await new Promise<void>((resolve, reject): void =>
+  await new Promise<void>((resolve, reject) =>
     ffmpeg(
       ytdl(url, {
         filter: "audioonly",
@@ -38,12 +33,11 @@ async function downloadSample(url, interaction) {
   ];
   let defaultFormat = "mp3";
 
-  // @eslint-ignore
-  try {
-    const { hostname } = new URL(url);
-    if (allowedHosts.includes(hostname.toString())) {
-      const user = interaction.user;
-      const { data, title } = await youtubeSampleSource(url);
+  const { hostname } = new URL(url);
+  if (allowedHosts.includes(hostname.toString())) {
+    const user = interaction.user;
+    await temporaryFileTask(async (filename) => {
+      const { data, title } = await youtubeSampleSource(url, filename);
       const file = new AttachmentBuilder(data).setName(
         `${title}.${defaultFormat}`,
       );
@@ -52,15 +46,14 @@ async function downloadSample(url, interaction) {
         content: `${user} Your sample is ready!`,
         files: [file],
       });
-    } else {
-      throw new Error(`url "${url}" is not supported`);
-    }
-  } catch (err) {
-    throw new Error(`${url} is not a valid URL`);
+    });
+  } else {
+    throw new Error(`url "${url}" is not supported`);
   }
 }
 
 const command = {
+  name: "sample",
   data: new SlashCommandBuilder()
     .setName("sample")
     .setDescription("Download a sample from YouTube")
