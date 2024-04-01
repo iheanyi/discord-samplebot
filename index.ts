@@ -43,6 +43,15 @@ const registerBody = commandsToRegister.map((command) => command.data.toJSON());
 (async () => {
   try {
     console.log(`Started refreshing 1 application (/) commands.`);
+    await rest.put(
+      Routes.applicationGuildCommands(String(clientID), String(guildID)),
+      { body: [] },
+    );
+    console.log("Successfully deleted all guild commands.");
+
+    // for global commands
+    await rest.put(Routes.applicationCommands(String(clientID)), { body: [] });
+    console.log("Successfully deleted all application commands.");
 
     // The put method is used to fully refresh all commands in the guild with the current set
     await rest.put(
