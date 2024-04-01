@@ -21,7 +21,7 @@ export interface Env {
 }
 
 class SampleBot {
-  constructor() {}
+  constructor(state: DurableObjectState, env: Env) {}
 
   async run() {
     const {
