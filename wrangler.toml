@@ -1,6 +1,6 @@
 name = "discord-sampelpebot"
 main = "index.ts"
-compatibility_date = "2024-03-29"
+compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
