@@ -11,7 +11,7 @@ async function youtubeSampleSource(url: string) {
   let filepath = tempfile({
     extension: `.mp3`,
   });
-  await new Promise((resolve, reject) =>
+  await new Promise<void>((resolve, reject): void =>
     ffmpeg(
       ytdl(url, {
         filter: "audioonly",
@@ -69,7 +69,6 @@ const command = {
   // @ts-ignore
   async execute(interaction): Promise<void> {
     const url = interaction.options.getString("url");
-    const user = interaction.user;
     try {
       await interaction.reply("Attempting to download sample...");
       await downloadSample(url, interaction);
