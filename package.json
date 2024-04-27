@@ -7,6 +7,7 @@
     "build": "tsc",
     "dev": "tsx watch *.ts",
     "start": "tsx index.ts",
+    "deploy-fly": "flyctl deploy --dockerfile Dockerfile.fly",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
