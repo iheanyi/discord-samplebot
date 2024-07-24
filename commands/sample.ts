@@ -2,7 +2,7 @@ import { AttachmentBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import fs from "node:fs";
 import { temporaryFileTask } from "tempy";
 import ffmpeg from "fluent-ffmpeg";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 
 async function youtubeSampleSource(url: string, filepath: string) {
   let info = await ytdl.getInfo(url);
