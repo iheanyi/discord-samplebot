@@ -1,11 +1,17 @@
-import { AttachmentBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import fs from "node:fs";
-import { temporaryFileTask } from "tempy";
-import ffmpeg from "fluent-ffmpeg";
+
 import ytdl from "@distube/ytdl-core";
+import {
+  AttachmentBuilder,
+  ChatInputCommandInteraction,
+  codeBlock,
+  SlashCommandBuilder,
+} from "discord.js";
+import ffmpeg from "fluent-ffmpeg";
+import { temporaryFileTask } from "tempy";
 
 async function youtubeSampleSource(url: string, filepath: string) {
-  let info = await ytdl.getInfo(url);
+  const info = await ytdl.getInfo(url);
   await new Promise<void>((resolve, reject) =>
     ffmpeg(
       ytdl(url, {
@@ -19,19 +25,19 @@ async function youtubeSampleSource(url: string, filepath: string) {
       .save(filepath),
   );
 
-  let data = await fs.promises.readFile(filepath);
+  const data = await fs.promises.readFile(filepath);
   return { data, title: info.videoDetails.title };
 }
 
 async function downloadSample(url: string, interaction: any) {
-  let allowedHosts = [
+  const allowedHosts = [
     "youtube.com",
     "m.youtube.com",
     "youtu.be",
     "www.youtube.com",
     "music.youtube.com",
   ];
-  let defaultFormat = "mp3";
+  const defaultFormat = "mp3";
 
   const { hostname } = new URL(url);
   if (allowedHosts.includes(hostname.toString())) {
@@ -63,17 +69,20 @@ const command = {
         .setDescription("YouTube URL to download")
         .setRequired(true);
     }),
-  // @ts-ignore
-  async execute(interaction): Promise<void> {
-    const url = interaction.options.getString("url");
+  async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+    const url = interaction.options.getString("url", true);
     try {
       await interaction.reply("Attempting to download sample...");
       await downloadSample(url, interaction);
     } catch (err: any) {
       console.error(err);
-      await interaction.followUp({
-        content: `There was an error while executing this command. ${codeBlock(err.toString())}`,
-      });
+      try {
+        await interaction.followUp({
+          content: `There was an error while executing this command. ${codeBlock(err.toString())}`,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   },
 };

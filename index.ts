@@ -1,7 +1,9 @@
-import dotenv from "dotenv";
-dotenv.config();
 import { Client, Events, GatewayIntentBits, REST, Routes } from "discord.js";
+import dotenv from "dotenv";
+
 import SampleCommand from "./commands/sample";
+
+dotenv.config();
 
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -47,9 +49,13 @@ class SampleBot {
           await SampleCommand.execute(interaction);
         } catch (error) {
           console.error(error);
-          await interaction.reply({
-            content: "There was an error while executing this command.",
-          });
+          try {
+            await interaction.reply({
+              content: "There was an error while executing this command.",
+            });
+          } catch (err) {
+            console.error(err);
+          }
         }
       }
     });
