@@ -26,7 +26,10 @@ async function youtubeSampleSource(url: string, filepath: string) {
   );
 
   const data = await fs.promises.readFile(filepath);
-  return { data, title: info.videoDetails.title };
+  return {
+    data,
+    title: `${info.videoDetails.title} - ${info.videoDetails.author.name}`,
+  };
 }
 
 async function downloadSample(url: string, interaction: any) {
