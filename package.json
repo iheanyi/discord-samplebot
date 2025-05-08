@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/iheanyi/discord-samplebot#readme",
   "dependencies": {
-    "@distube/ytdl-core": "^4.13.7",
+    "@distube/ytdl-core": "^4.16.10",
     "discord.js": "^14.12.1",
     "dotenv": "^16.4.5",
     "fluent-ffmpeg": "^2.1.2",
