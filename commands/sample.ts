@@ -7,7 +7,7 @@ import {
   codeBlock,
   SlashCommandBuilder,
 } from "discord.js";
-import ffmpeg from "fluent-ffmpeg-7";
+import ffmpeg from "fluent-ffmpeg";
 import { temporaryFileTask } from "tempy";
 
 async function youtubeSampleSource(url: string, filepath: string) {
