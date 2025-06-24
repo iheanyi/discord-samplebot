@@ -24,7 +24,7 @@ RUN apt-get update -qq && \
 COPY --link package-lock.json package.json ./
 RUN npm ci --include=dev
 
-COPY package_overrides/sig.js node_modules/@distube/ytdl-core/lib/sig.js
+# COPY package_overrides/sig.js node_modules/@distube/ytdl-core/lib/sig.js
 
 # Copy application code
 COPY --link . .
