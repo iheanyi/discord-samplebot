@@ -1,0 +1,32 @@
+[project]
+name = "discord-samplebot"
+version = "1.0.0"
+description = "Discord bot for downloading audio samples"
+requires-python = ">=3.12"
+dependencies = [
+    "discord-py>=2.3.0",
+    "python-dotenv>=1.0.0",
+    "yt-dlp>=2024.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "B",     # flake8-bugbear
+    "UP",    # pyupgrade
+]
+
+[tool.ruff.format]
+quote-style = "double"

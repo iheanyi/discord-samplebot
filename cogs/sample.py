@@ -1,11 +1,10 @@
-import os
 import tempfile
 from pathlib import Path
 
 import discord
+import yt_dlp
 from discord import app_commands
 from discord.ext import commands
-import yt_dlp
 
 
 class Sample(commands.Cog):
@@ -19,7 +18,7 @@ class Sample(commands.Cog):
 
         try:
             with tempfile.TemporaryDirectory() as tmpdir:
-                output_template = os.path.join(tmpdir, "%(title)s.%(ext)s")
+                output_template = str(Path(tmpdir) / "%(title)s.%(ext)s")
 
                 ydl_opts = {
                     "format": "bestaudio/best",
@@ -34,14 +33,6 @@ class Sample(commands.Cog):
                     "quiet": True,
                     "no_warnings": True,
                 }
-
-                # Add cookies if provided
-                cookie = os.getenv("YT_COOKIE")
-                if cookie:
-                    cookie_file = os.path.join(tmpdir, "cookies.txt")
-                    with open(cookie_file, "w") as f:
-                        f.write(cookie)
-                    ydl_opts["cookiefile"] = cookie_file
 
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url, download=True)
@@ -75,7 +66,7 @@ class Sample(commands.Cog):
         except Exception as e:
             print(f"Error downloading sample: {e}")
             await interaction.followup.send(
-                f"There was an error while executing this command.\n```\n{str(e)}\n```"
+                f"There was an error while executing this command.\n```\n{e!s}\n```"
             )
 
 

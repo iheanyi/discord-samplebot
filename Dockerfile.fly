@@ -6,14 +6,15 @@ LABEL fly_launch_runtime="Python"
 
 WORKDIR /app
 
-# Install ffmpeg for audio processing
+# Install uv and ffmpeg
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y ffmpeg && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies with uv
+COPY pyproject.toml .
+RUN uv pip install --system -e .
 
 # Copy application code
 COPY bot.py .
