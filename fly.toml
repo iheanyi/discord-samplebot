@@ -7,14 +7,7 @@ app = 'discord-samplebot'
 primary_region = 'ewr'
 
 [build]
-
-[http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = false
-  auto_start_machines = false
-  min_machines_running = 0
-  processes = ['app']
+  dockerfile = "Dockerfile.fly"
 
 [[vm]]
   memory = '1gb'
