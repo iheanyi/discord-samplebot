@@ -14,6 +14,9 @@ dev = [
     "ruff>=0.4.0",
 ]
 
+[tool.setuptools]
+packages = []
+
 [tool.ruff]
 target-version = "py312"
 line-length = 100
